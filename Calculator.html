@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>電卓</title>
+	<style>
+		input{
+			font-size:40px;
+		}
+		
+		table{
+			border-collapse:collapse;
+		}
+		
+		td{
+			width:80px;
+			height:80px;
+			font-size:30pt;
+			text-align:center;
+			border:solid;
+			background-color:#F0F0F0;
+		}
+		
+		td:hover{
+			background-color:#B0B0B0;
+			cursor:default;
+		}
+	</style>
+	<script>
+		window.onload = function(){
+			const element = document.querySelectorAll("#num td");
+			for(const td of element){
+				const tdValue = td.innerHTML;
+				if(tdValue !== 'AC' && tdValue !== '='){
+					td.onclick = ()=> onclickTd(tdValue);
+				}
+			}
+		}
+		
+		function onclickTd(tdValue){
+			if(tdValue === '＊'){
+				formula.value += '*';
+			}else if(tdValue === '－'){
+				formula.value += '-';
+			}else{
+				formula.value += tdValue;
+			}
+		}
+		
+		window.document.onkeydown = function(event){
+			if(event.key === 'Enter'){
+				calculation();
+			}
+		}
+		
+		function calculation(){
+			const value = formula.value;
+			if(value.match(/[^0-9\+\-\*\/~\(\)\.]/g) === null){
+				try{
+					result.innerHTML = '=' + Function('return ('+ value +');')();
+				}catch(err){
+					result.innerHTML = 'ERROR';
+				}
+			}else{
+				result.innerHTML = 'ERROR';
+			}
+		}
+		
+		function allclear(){
+			formula.value = "";
+			result.innerHTML = 0;
+		}
+	</script>
+</head>
+<body>
+	<p>
+		<input id="formula" type="text" size="30">
+		<h1 id="result">0</h1>
+	</p>
+	<table id="num">
+		<tr>
+			<td onclick = "allclear()">AC</td>
+			<td>(</td>
+			<td>)</td>
+			<td>/</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>8</td>
+			<td>9</td>
+			<td>＊</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>5</td>
+			<td>6</td>
+			<td>－</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+			<td>+</td>
+		</tr>
+		<tr>
+			<td colspan="2">0</td>
+			<td>.</td>
+			<td onclick = "calculation()">=</td>
+		</tr>
+	</table>
+</body>
+</html>
